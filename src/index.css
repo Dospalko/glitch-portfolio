@@ -1,88 +1,135 @@
-/* src/index.css */
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;700&family=Rubik+Glitch&display=swap");
 
-/* 1. Import Google Fonts (or use @font-face) - MUST be before @import "tailwindcss" */
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;700&display=swap");
-
-/* 2. Import Tailwind CSS */
 @import "tailwindcss";
 
-/* 3. Define Custom Properties (CSS Variables) for Colors in :root */
 @layer base {
   :root {
-    --color-background: #111111;
-    --color-text-primary: #EAEAEA;
-    --color-text-secondary: #A0A0A0;
-    --color-accent-glitch: #00FFFF; /* Cyan */
+    --color-accent-glitch: #00FFFF;
     --color-accent-glitch-darker: #00AAAA;
-    --color-highlight-bg: rgba(255, 255, 255, 0.05);
-    --color-border-subtle: rgba(255, 255, 255, 0.1); /* Example border color */
+    --color-highlight-bg: rgba(128, 128, 128, 0.1);
+    --color-background: #050505;
+    --color-text-primary: #f5f5f5;
+    --color-text-secondary: #b0b0b0;
+    --color-border-subtle: rgba(255, 255, 255, 0.2);
+    --color-error-red: #ff3333;
 
-    /* Apply base background and text color */
     body {
       background-color: var(--color-background);
       color: var(--color-text-primary);
-      /* Font family will be set via @theme below or base utility class */
       @apply antialiased;
     }
   }
 }
 
-/* 4. Define Custom Fonts using @theme */
 @theme {
-  --font-sans: "Inter", sans-serif; /* Fallback added */
-  --font-mono: "Fira Code", monospace; /* Fallback added */
-
-  /* If you needed specific feature settings: */
-  /* --font-mono--font-feature-settings: "calt", "liga"; */
-  /* --font-mono--font-variation-settings: normal; */
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "Fira Code", monospace;
+  --font-glitch: "Rubik Glitch", cursive;
 }
 
-/* 5. Define Custom Keyframes and Animations (Standard CSS) */
-@layer utilities { /* Or just define globally if preferred */
-  @keyframes textJitter {
-    0%, 100% { transform: translate(0, 0); }
-    20% { transform: translate(-1px, 1px); }
-    40% { transform: translate(1px, -1px); }
-    60% { transform: translate(-1px, -1px); }
-    80% { transform: translate(1px, 1px); }
+@layer utilities {
+
+  @keyframes textJitterSlight {
+    2% { transform: translate(0.5px, -0.5px) skewX(-1deg); }
+    4% { transform: translate(-0.5px, 0.5px) skewX(1deg); }
+    6% { transform: translate(0.5px, 0.5px) skewX(-1deg); }
+    8% { transform: translate(-0.5px, -0.5px) skewX(1deg); }
+    10% { transform: translate(0, 0) skewX(0); }
+    100% { transform: translate(0, 0) skewX(0); }
   }
 
-  /* Utility class to apply the animation */
-  .animate-text-jitter-hover:hover {
-     /* Run animation briefly on hover */
-    animation: textJitter 0.2s linear 2; /* Example: run twice quickly */
+  @keyframes textJitterHeavy {
+    2%, 64% { transform: translate(2px, 1px) skewX(8deg); opacity: 0.8; }
+    4%, 60% { transform: translate(-2px, -1px) skewX(-8deg); opacity: 1; }
+    62% { transform: translate(1px, -1.5px) skewX(-4deg); opacity: 0.85; }
+    66%, 100% { transform: translate(0, 0) skewX(0); opacity: 1; }
   }
 
-  /* Example: A subtle color pulse for the glitch accent */
   @keyframes colorPulse {
-    0%, 100% { color: var(--color-accent-glitch); opacity: 1; }
-    50% { color: var(--color-accent-glitch-darker); opacity: 0.8; }
+    0%, 100% { color: var(--color-accent-glitch); text-shadow: 0 0 5px var(--color-accent-glitch); opacity: 1;}
+    50% { color: var(--color-accent-glitch-darker); text-shadow: none; opacity: 0.85; }
+  }
+
+  @keyframes imageGlitchHeavy {
+    0% { transform: translate(0, 0); filter: none; opacity: 1; }
+    10% { transform: translate(-5px, -3px) scale(1.01); filter: contrast(1.5) hue-rotate(20deg); opacity: 0.7; }
+    20% { transform: translate(4px, 2px) scale(0.99); filter: brightness(1.2) saturate(1.8); opacity: 1; }
+    30% { transform: translate(-3px, 4px) skew(-5deg, -2deg) scale(1.02); filter: contrast(0.8) sepia(0.3); opacity: 0.6; }
+    40% { transform: translate(2px, -2px) skew(3deg, 1deg); filter: hue-rotate(-15deg) brightness(0.9); opacity: 1; }
+    50% { transform: translate(0, 0); filter: invert(1) contrast(2); opacity: 0.1; } /* Quick invert flash */
+    51% { transform: translate(0, 0); filter: none; opacity: 1; }
+    100% { transform: translate(0, 0); filter: none; opacity: 1; }
+  }
+
+  @keyframes blockGlitch {
+    0%, 100% { clip-path: inset(0 0 0 0); }
+    10% { clip-path: inset(10% 20% 30% 5%); }
+    20% { clip-path: inset(80% 5% 10% 15%); }
+    30% { clip-path: inset(45% 50% 5% 25%); }
+    40% { clip-path: inset(25% 10% 55% 40%); }
+    50% { clip-path: inset(60% 30% 20% 10%); }
+    60% { clip-path: inset(5% 70% 80% 5%); }
+    70% { clip-path: inset(35% 15% 45% 35%); }
+    80% { clip-path: inset(90% 40% 2% 20%); }
+    90% { clip-path: inset(15% 5% 75% 50%); }
+  }
+
+   @keyframes scanlines {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 10px; } /* Controls speed */
+  }
+
+  .animate-text-jitter-slight-hover:hover {
+    animation: textJitterSlight 0.3s linear infinite;
+  }
+
+  .animate-text-jitter-heavy-hover:hover {
+    animation: textJitterHeavy 0.5s linear infinite;
+  }
+
+  .animate-active-glitch {
+    animation: textJitterSlight 1s steps(3, jump-start) infinite alternate 0.2s,
+               colorPulse 1.3s ease-in-out infinite alternate;
   }
 
   .animate-color-pulse {
-    animation: colorPulse 1.5s ease-in-out infinite;
+    animation: colorPulse 1.8s ease-in-out infinite alternate;
   }
 
-  /* Placeholder for image glitch */
-   @keyframes imageGlitch {
-     /* Define steps for color channel shift, displacement */
-     0% { filter: none; transform: translate(0, 0); }
-     25% { filter: hue-rotate(10deg) brightness(1.1); transform: translate(2px, -1px); }
-     50% { filter: saturate(1.5); transform: translate(-1px, 2px); }
-     75% { filter: contrast(1.2); transform: translate(1px, -1px); }
-     100% { filter: none; transform: translate(0, 0); }
-   }
+  .animate-image-glitch-hover:hover > *, /* Target overlay or image */
+  .animate-image-glitch-hover:hover { /* Target container if needed */
+      animation: imageGlitchHeavy 0.8s steps(4, end) infinite;
+  }
 
-   .animate-image-glitch-hover:hover {
-       animation: imageGlitch 0.4s steps(3, end) infinite; /* Jerky animation */
+  .animate-block-glitch-hover:hover {
+     animation: blockGlitch 0.6s steps(2, jump-none) infinite;
+  }
+
+  .has-scanlines::after {
+     content: "";
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     pointer-events: none;
+     background: linear-gradient(
+        to bottom,
+        rgba(20, 20, 20, 0) 0%, /* Adjust color/opacity */
+        rgba(20, 20, 20, 0.4) 50%,
+        rgba(20, 20, 20, 0) 100%
+     );
+     background-size: 100% 10px; /* Controls line thickness */
+     animation: scanlines 0.2s linear infinite;
+     opacity: 0.4; /* Overall scanline opacity */
+     z-index: 10; /* Ensure it's on top */
    }
 
 }
 
-/* 6. Apply base font using Tailwind utility */
 body {
-   @apply font-sans; /* Apply the --font-sans defined in @theme */
-   background-image: radial-gradient(var(--color-text-secondary) 0.5px, transparent 0.5px);
-   background-size: 15px 15px;
-   background-position: -7px -7px; /* Offset */
+   @apply font-sans;
+   background-image: radial-gradient(var(--color-text-secondary) 0.6px, transparent 0.6px);
+   background-size: 18px 18px;
+   background-position: -9px -9px;
 }
