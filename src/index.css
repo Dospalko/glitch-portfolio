@@ -78,9 +78,6 @@
     100% { background-position: 0 10px; }
   }
 
-
-
-
   .animate-text-jitter-slight-hover:hover {
     animation: textJitterSlight 0.3s linear infinite;
   }
@@ -131,23 +128,9 @@
 
 body {
    @apply font-sans;
-   background-image: radial-gradient(var(--color-text-secondary) 0.6px, transparent 0.6px);
-   background-size: 18px 18px;
-   background-position: -9px -9px;
    position: relative;
    overflow-x: hidden;
-   
+   /* Static background pattern removed, canvas handles background */
 }
 
-body::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: -1;
-    background-color: rgba(0, 200, 200, 0.015);
-    opacity: 0.25;
-}
+/* body::after pseudo-element removed */

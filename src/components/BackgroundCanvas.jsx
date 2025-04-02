@@ -5,156 +5,150 @@ const BackgroundCanvas = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return; // Ensure canvas exists
-
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let animationFrameId;
-    let gridSpacing = 30; // Pixels between grid lines
-    let dotSize = 1;
-    let glitchIntensity = 0; // Controls how often glitches happen (0-1)
-    let glitchTimer = 0;
-    let glitchDuration = 0;
 
-    // Colors from CSS Variables (ensure these are defined in index.css)
+    let animationFrameId;
+    let gridSpacing = 30; // Vzdialenosť medzi bodmi v sieti
+    let dotSize = 1; // Veľkosť bodov
+    let glitchIntensity = 0; // Určuje intenzitu glitch efektu
+    let glitchTimer = 0; // Časovač pre glitch efekt
+    let glitchDuration = 0; // Dĺžka trvania aktuálneho glitchu
+
+    // Načítanie farieb z CSS premenných, s fallback hodnotami
     const style = getComputedStyle(document.documentElement);
     const primaryColor = style.getPropertyValue('--color-text-secondary').trim() || '#b0b0b0';
     const accentColor = style.getPropertyValue('--color-accent-glitch').trim() || '#00FFFF';
     const backgroundColor = style.getPropertyValue('--color-background').trim() || '#050505';
 
-    // Debounced resize handler
+    // Debounce handler pre zmenu veľkosti okna
     let resizeTimeout;
     const handleResize = () => {
-       clearTimeout(resizeTimeout);
-       resizeTimeout = setTimeout(() => {
-           canvas.width = window.innerWidth;
-           canvas.height = window.innerHeight;
-           // Redraw immediately on resize might be needed depending on draw loop
-           drawGrid();
-       }, 150); // Debounce resize events
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drawGrid(); // Prekreslenie po zmene veľkosti
+      }, 150);
     };
 
-    // Set initial canvas size
+    // Nastavenie počiatočnej veľkosti plátna
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     window.addEventListener('resize', handleResize);
 
-
+    // Funkcia na prekreslenie siete a glitch efektov
     const drawGrid = () => {
-      // Clear canvas with background color
-       ctx.fillStyle = backgroundColor;
-       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Vyčistenie plátna a nastavenie pozadia
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Set line styles
-       ctx.strokeStyle = primaryColor;
-       ctx.fillStyle = primaryColor; // For dots
-       ctx.lineWidth = 0.5;
-       ctx.globalAlpha = 0.4; // Make grid subtle
+      // Nastavenie vlastností pre vykresľovanie bodov
+      ctx.lineWidth = 0.5;
+      ctx.globalAlpha = 0.4;
 
-      // Decide if glitching this frame
-       let isGlitching = false;
-       if (glitchTimer <= 0 && Math.random() < 0.008) { // Low probability to start glitch
-          glitchDuration = Math.random() * 15 + 5; // Glitch for 5-20 frames
-          glitchTimer = glitchDuration;
-          glitchIntensity = Math.random() * 0.6 + 0.1; // Random intensity
-       }
-       if (glitchTimer > 0) {
-          isGlitching = true;
-          glitchTimer--;
-          if (glitchTimer <= 0) {
-             glitchIntensity = 0; // Reset intensity when duration ends
-          }
-       }
-
-       // Draw vertical lines / dots
-       for (let x = 0; x <= canvas.width; x += gridSpacing) {
-          let currentX = x;
-          let currentAlpha = 0.4;
-          let currentColor = primaryColor;
-
-          // Apply Glitch effects
-           if (isGlitching && Math.random() < glitchIntensity * 0.5) {
-              currentX += (Math.random() - 0.5) * 10 * glitchIntensity; // Displacement
-              currentAlpha = 0.1 + Math.random() * 0.6 * glitchIntensity; // Random alpha
-               if (Math.random() < glitchIntensity * 0.3) {
-                  currentColor = accentColor; // Flash accent color
-                  currentAlpha = 0.5 + Math.random() * 0.5; // Brighter alpha for accent
-               }
-           }
-
-           ctx.globalAlpha = currentAlpha;
-           ctx.fillStyle = currentColor;
-
-            // Draw dots instead of lines
-            for (let y = 0; y <= canvas.height; y+= gridSpacing) {
-               let currentY = y;
-                 if (isGlitching && Math.random() < glitchIntensity * 0.3) {
-                    currentY += (Math.random() - 0.5) * 8 * glitchIntensity;
-                 }
-
-                 ctx.beginPath();
-                 ctx.arc(currentX, currentY, dotSize, 0, Math.PI * 2);
-                 ctx.fill();
-
-                 // --- OR Draw Lines (Comment out dots if using lines) ---
-                 // ctx.strokeStyle = currentColor;
-                 // ctx.beginPath();
-                 // ctx.moveTo(currentX, 0);
-                 // ctx.lineTo(currentX, canvas.height);
-                 // ctx.stroke();
-                 // break; // Remove break if drawing lines AND dots
-            }
-       }
-
-       // Draw horizontal dots (simplified, similar logic can be applied)
-       ctx.globalAlpha = 0.4; // Reset alpha for horizontal pass if needed
-       ctx.fillStyle = primaryColor;
-        for (let y = 0; y <= canvas.height; y += gridSpacing) {
-           for (let x = 0; x <= canvas.width; x += gridSpacing) {
-              // Could add horizontal glitching here too if desired
-              // This loop currently redraws dots, ensure logic aligns with vertical pass
-               // Re-enable if only drawing horizontal dots separately
-              //  ctx.beginPath();
-              //  ctx.arc(x, y, dotSize, 0, Math.PI * 2);
-              //  ctx.fill();
-           }
+      // Určenie, či má byť aktivovaný glitch efekt
+      let isGlitching = false;
+      if (glitchTimer <= 0 && Math.random() < 0.012) { // Zvýšená pravdepodobnosť pre glitch
+        glitchDuration = Math.random() * 15 + 5; // Glitch trvá 5-20 snímok
+        glitchTimer = glitchDuration;
+        glitchIntensity = Math.random() * 0.6 + 0.2; // Intenzita glitch efektu
+      }
+      if (glitchTimer > 0) {
+        isGlitching = true;
+        glitchTimer--;
+        if (glitchTimer <= 0) {
+          glitchIntensity = 0; // Reset intenzity po ukončení glitchu
         }
+      }
 
+      // Vykreslenie vertikálnych bodov siete s glitch efektom
+      for (let x = 0; x <= canvas.width; x += gridSpacing) {
+        let currentX = x;
+        let currentAlpha = 0.4;
+        let currentColor = primaryColor;
 
-       ctx.globalAlpha = 1; // Reset global alpha
+        // Náhodné posunutie a zmena farby v prípade glitch efektu
+        if (isGlitching && Math.random() < glitchIntensity * 0.5) {
+          currentX += (Math.random() - 0.5) * 10 * glitchIntensity; // Horizontálne posunutie
+          currentAlpha = 0.1 + Math.random() * 0.6 * glitchIntensity;
+          if (Math.random() < glitchIntensity * 0.3) {
+            currentColor = accentColor;
+            currentAlpha = 0.5 + Math.random() * 0.5;
+          }
+        }
+        ctx.globalAlpha = currentAlpha;
+        ctx.fillStyle = currentColor;
+        for (let y = 0; y <= canvas.height; y += gridSpacing) {
+          let currentY = y;
+          if (isGlitching && Math.random() < glitchIntensity * 0.3) {
+            currentY += (Math.random() - 0.5) * 8 * glitchIntensity; // Vertikálne posunutie
+          }
+          ctx.beginPath();
+          ctx.arc(currentX, currentY, dotSize, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Dodatočné glitch efekty: posunuté horizontálne "slices" a náhodné oblasťky
+      if (isGlitching) {
+        // Glitch - posun horizontálnych "slice" častí obrazu
+        const numSlices = Math.floor(Math.random() * 3) + 1; // 1 až 3 slices
+        for (let i = 0; i < numSlices; i++) {
+          const sliceHeight = Math.random() * 30 + 10; // Výška slice (10 až 40px)
+          const y = Math.floor(Math.random() * canvas.height);
+          const offset = Math.floor((Math.random() - 0.5) * 40 * glitchIntensity); // Náhodný horizontálny posun
+          try {
+            const slice = ctx.getImageData(0, y, canvas.width, sliceHeight);
+            ctx.putImageData(slice, offset, y);
+          } catch (err) {
+            console.error('Glitch slice error: ', err);
+          }
+        }
+        // Glitch - vykreslenie náhodných farebných oblasťok s accent farbou
+        const numRects = Math.floor(Math.random() * 2);
+        for (let i = 0; i < numRects; i++) {
+          const rectWidth = Math.random() * canvas.width * 0.5;
+          const rectHeight = Math.random() * 20 + 5;
+          const rectX = Math.random() * canvas.width;
+          const rectY = Math.random() * canvas.height;
+          ctx.fillStyle = accentColor;
+          ctx.globalAlpha = 0.3 + Math.random() * 0.5;
+          ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+        }
+        ctx.globalAlpha = 1; // Reset globálnej priehľadnosti
+      }
     };
 
-
-    // Animation loop
+    // Animácia pomocou requestAnimationFrame
     const render = () => {
       drawGrid();
       animationFrameId = requestAnimationFrame(render);
     };
+    render();
 
-    render(); // Start the loop
-
-    // Cleanup function
+    // Vyčistenie zdrojov pri odmontovaní komponentu
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeout);
     };
-
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   return (
     <canvas
       ref={canvasRef}
       style={{
-        position: 'fixed', // Keep it fixed behind everything
+        position: 'fixed',
         top: 0,
         left: 0,
         width: '100vw',
         height: '100vh',
-        zIndex: -10, // Ensure it's far behind content and other potential overlays
-        pointerEvents: 'none', // Ignore mouse events
-        opacity: 0.8 // Adjust overall opacity if needed
+        zIndex: -10, // Umiestnenie za ostatný obsah
+        pointerEvents: 'none', // Ignorovanie udalostí myši
+        opacity: 0.8 // Nastavenie priehľadnosti
       }}
-      aria-hidden="true" // Hide from accessibility tree
+      aria-hidden="true"
     />
   );
 };
