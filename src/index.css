@@ -82,4 +82,7 @@
 /* 6. Apply base font using Tailwind utility */
 body {
    @apply font-sans; /* Apply the --font-sans defined in @theme */
+   background-image: radial-gradient(var(--color-text-secondary) 0.5px, transparent 0.5px);
+   background-size: 15px 15px;
+   background-position: -7px -7px; /* Offset */
 }

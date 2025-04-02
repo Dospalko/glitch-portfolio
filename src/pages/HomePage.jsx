@@ -88,7 +88,7 @@ const HomePage = () => {
             <GlitchButton to="/contact" className="border-transparent hover:border-[var(--color-text-secondary)]">
                Contact Me
             </GlitchButton>
-            {/* Example external link */}
+         
             {/* <GlitchButton href="https://github.com/yourusername" className="border-transparent hover:border-[var(--color-text-secondary)]"> GitHub </GlitchButton> */}
           </motion.div>
         </div>
@@ -104,11 +104,10 @@ const HomePage = () => {
              {/* Placeholder for visual or actual image */}
              <span className="text-[var(--color-text-secondary)] text-sm">(Visual Element Placeholder)</span>
 
-             {/* Example Image - Apply glitch hover */}
-             {/* <img
+             <img
                 src="/path/to/your/image.jpg" alt="Abstract visual"
                 className="absolute inset-0 w-full h-full object-cover animate-image-glitch-hover"
-             /> */}
+             /> 
           </div>
         </motion.div>
       </div>
