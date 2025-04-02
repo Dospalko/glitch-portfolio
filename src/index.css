@@ -34,8 +34,7 @@
     4% { transform: translate(-0.5px, 0.5px) skewX(1deg); }
     6% { transform: translate(0.5px, 0.5px) skewX(-1deg); }
     8% { transform: translate(-0.5px, -0.5px) skewX(1deg); }
-    10% { transform: translate(0, 0) skewX(0); }
-    100% { transform: translate(0, 0) skewX(0); }
+    10%, 100% { transform: translate(0, 0) skewX(0); }
   }
 
   @keyframes textJitterHeavy {
@@ -56,7 +55,7 @@
     20% { transform: translate(4px, 2px) scale(0.99); filter: brightness(1.2) saturate(1.8); opacity: 1; }
     30% { transform: translate(-3px, 4px) skew(-5deg, -2deg) scale(1.02); filter: contrast(0.8) sepia(0.3); opacity: 0.6; }
     40% { transform: translate(2px, -2px) skew(3deg, 1deg); filter: hue-rotate(-15deg) brightness(0.9); opacity: 1; }
-    50% { transform: translate(0, 0); filter: invert(1) contrast(2); opacity: 0.1; } /* Quick invert flash */
+    50% { transform: translate(0, 0); filter: invert(1) contrast(2); opacity: 0.1; }
     51% { transform: translate(0, 0); filter: none; opacity: 1; }
     100% { transform: translate(0, 0); filter: none; opacity: 1; }
   }
@@ -76,8 +75,11 @@
 
    @keyframes scanlines {
     0% { background-position: 0 0; }
-    100% { background-position: 0 10px; } /* Controls speed */
+    100% { background-position: 0 10px; }
   }
+
+
+
 
   .animate-text-jitter-slight-hover:hover {
     animation: textJitterSlight 0.3s linear infinite;
@@ -96,8 +98,8 @@
     animation: colorPulse 1.8s ease-in-out infinite alternate;
   }
 
-  .animate-image-glitch-hover:hover > *, /* Target overlay or image */
-  .animate-image-glitch-hover:hover { /* Target container if needed */
+  .animate-image-glitch-hover:hover > *,
+  .animate-image-glitch-hover:hover {
       animation: imageGlitchHeavy 0.8s steps(4, end) infinite;
   }
 
@@ -115,14 +117,14 @@
      pointer-events: none;
      background: linear-gradient(
         to bottom,
-        rgba(20, 20, 20, 0) 0%, /* Adjust color/opacity */
+        rgba(20, 20, 20, 0) 0%,
         rgba(20, 20, 20, 0.4) 50%,
         rgba(20, 20, 20, 0) 100%
      );
-     background-size: 100% 10px; /* Controls line thickness */
+     background-size: 100% 10px;
      animation: scanlines 0.2s linear infinite;
-     opacity: 0.4; /* Overall scanline opacity */
-     z-index: 10; /* Ensure it's on top */
+     opacity: 0.3;
+     z-index: 10;
    }
 
 }
@@ -132,4 +134,20 @@ body {
    background-image: radial-gradient(var(--color-text-secondary) 0.6px, transparent 0.6px);
    background-size: 18px 18px;
    background-position: -9px -9px;
+   position: relative;
+   overflow-x: hidden;
+   
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    background-color: rgba(0, 200, 200, 0.015);
+    opacity: 0.25;
 }
