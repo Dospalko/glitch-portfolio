@@ -1,1 +1,85 @@
+/* src/index.css */
+
+/* 1. Import Google Fonts (or use @font-face) - MUST be before @import "tailwindcss" */
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;700&display=swap");
+
+/* 2. Import Tailwind CSS */
 @import "tailwindcss";
+
+/* 3. Define Custom Properties (CSS Variables) for Colors in :root */
+@layer base {
+  :root {
+    --color-background: #111111;
+    --color-text-primary: #EAEAEA;
+    --color-text-secondary: #A0A0A0;
+    --color-accent-glitch: #00FFFF; /* Cyan */
+    --color-accent-glitch-darker: #00AAAA;
+    --color-highlight-bg: rgba(255, 255, 255, 0.05);
+    --color-border-subtle: rgba(255, 255, 255, 0.1); /* Example border color */
+
+    /* Apply base background and text color */
+    body {
+      background-color: var(--color-background);
+      color: var(--color-text-primary);
+      /* Font family will be set via @theme below or base utility class */
+      @apply antialiased;
+    }
+  }
+}
+
+/* 4. Define Custom Fonts using @theme */
+@theme {
+  --font-sans: "Inter", sans-serif; /* Fallback added */
+  --font-mono: "Fira Code", monospace; /* Fallback added */
+
+  /* If you needed specific feature settings: */
+  /* --font-mono--font-feature-settings: "calt", "liga"; */
+  /* --font-mono--font-variation-settings: normal; */
+}
+
+/* 5. Define Custom Keyframes and Animations (Standard CSS) */
+@layer utilities { /* Or just define globally if preferred */
+  @keyframes textJitter {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-1px, 1px); }
+    40% { transform: translate(1px, -1px); }
+    60% { transform: translate(-1px, -1px); }
+    80% { transform: translate(1px, 1px); }
+  }
+
+  /* Utility class to apply the animation */
+  .animate-text-jitter-hover:hover {
+     /* Run animation briefly on hover */
+    animation: textJitter 0.2s linear 2; /* Example: run twice quickly */
+  }
+
+  /* Example: A subtle color pulse for the glitch accent */
+  @keyframes colorPulse {
+    0%, 100% { color: var(--color-accent-glitch); opacity: 1; }
+    50% { color: var(--color-accent-glitch-darker); opacity: 0.8; }
+  }
+
+  .animate-color-pulse {
+    animation: colorPulse 1.5s ease-in-out infinite;
+  }
+
+  /* Placeholder for image glitch */
+   @keyframes imageGlitch {
+     /* Define steps for color channel shift, displacement */
+     0% { filter: none; transform: translate(0, 0); }
+     25% { filter: hue-rotate(10deg) brightness(1.1); transform: translate(2px, -1px); }
+     50% { filter: saturate(1.5); transform: translate(-1px, 2px); }
+     75% { filter: contrast(1.2); transform: translate(1px, -1px); }
+     100% { filter: none; transform: translate(0, 0); }
+   }
+
+   .animate-image-glitch-hover:hover {
+       animation: imageGlitch 0.4s steps(3, end) infinite; /* Jerky animation */
+   }
+
+}
+
+/* 6. Apply base font using Tailwind utility */
+body {
+   @apply font-sans; /* Apply the --font-sans defined in @theme */
+}
