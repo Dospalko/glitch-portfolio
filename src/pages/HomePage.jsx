@@ -179,10 +179,10 @@ const HomePage = () => {
                   <span className="text-[var(--color-accent-glitch)] animate-color-pulse">
                     //
                   </span>{" "}
-                <span className="">Hi, I'm Dominik </span> <br />
+                <span className="">Hi, Dominik here </span> <br />
                   <span className="text-sm flex gap-2 mt-5">
                     {" "}
-                    <FaMapMarkerAlt /> Based in Kosice
+                    <FaMapMarkerAlt /> Based in Kosice, Slovakia
                   </span>
                 </GlitchWrapper>
               </motion.h1>
