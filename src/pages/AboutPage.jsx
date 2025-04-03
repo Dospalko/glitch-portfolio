@@ -142,7 +142,7 @@ const AboutPage = () => {
                   Hi! I'm Dominik Palo, a <strong>full stack AI developer</strong> and <strong>student</strong> at the Technical University of Košice. I started programming in high school, cultivating a passion that has driven me for about <strong>6 years</strong>. Alongside my formal education, I continuously enhance my skills through personal projects and practical IT roles. I recently completed my bachelor's degree.
                  </p>
                  <p className="leading-relaxed text-[var(--color-text-secondary)]">
-                   My journey at TU Košice involved rigorous coursework and projects, honing my abilities across the full stack. Lately, my enthusiasm has pivoted towards the cutting-edge field of AI, where I'm actively developing applications leveraging large language models (LLMs) and exploring the potential of autonomous agents to solve complex real-world problems.
+                   My journey at TU Košice involved rigorous coursework and projects, honing my abilities across the full stack. Lately, my enthusiasm has pivoted towards the cutting-edge field of AI, where I'm actively developing applications leveraging large language models (LLMs) and exploring the potential of autonomous agents to solve complex real-world problems. I thrive on challenges and am always eager to learn and implement new technologies.
                  </p>
              </motion.div>
           </div>
