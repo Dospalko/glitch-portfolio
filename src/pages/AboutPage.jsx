@@ -112,7 +112,7 @@ const AboutPage = () => {
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-[var(--color-text-secondary)] text-sm font-mono">
-                  [ Profile Snapshot ]
+                  [ Error ]
                 </span>
               </div>
               <div className="absolute inset-0 w-full h-full has-scanlines z-10"></div>

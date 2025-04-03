@@ -36,15 +36,7 @@ const ProjectsPage = () => {
       animate="animate"
       exit="exit"
     >
-      {/* Hlavný nadpis stránky */}
-      <motion.h2
-        className="text-3xl md:text-4xl font-bold font-mono mb-12 text-center glitch-text"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.3 }}
-      >
-        <span className="text-[var(--color-accent-glitch)]">//</span> ./Selected_Works
-      </motion.h2>
+     
 
       {/* Sekcia pracovných projektov */}
       <motion.div
