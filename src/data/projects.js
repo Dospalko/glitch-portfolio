@@ -40,15 +40,6 @@ export const projectsData = [
       codeUrl: "#",
       category: "work", // Add category property s
     },
-    {
-      id: 4,
-      title: "GlassFinder - Smilingwords",
-      description: "In my previous work we developed a web application as CMS for the glasses guy where he can edit the glasses he wants to sell.",
-      tags: ["Firebase","Flutter","Firestore","Dart"],
-      imageUrl: "https://via.placeholder.com/600x400/1A1A1A/EAEAEA?text=GlitchArt+Generator",
-      liveUrl: "#", // Maybe the portfolio itself uses this?
-      codeUrl: "#",
-      category: "work", // Add category property s
-    },
+   
      // Add more of your best projects here...
   ];

@@ -78,15 +78,15 @@ const achievements = [
     icon: null,
     title: "Bachelor's Degree Earned",
     description:
-      "Successfully completed my Bachelor's degree in Informatics at the Technical University of Košice with excellent results, building a strong foundation in computer science.",
+      "Successfully completed my Bachelor's degree in Informatics at the Technical University of Košice with good results, building a strong foundation in computer science.",
     image: "/images/bp.png",
   },
   {
     id: 4,
     icon: null,
-    title: "Chakthton Product Owner",
+    title: "Hackathon Product Owner",
     description:
-      "After winning the Chaktohn pre-event, my team and I acted as product owners and mentors at the main Telekom event, guiding participants on our theme.",
+      "After winning the Hackathon last year, me and my collague joined this year as product owners and mentors at the hackathon, guiding participants on our own theme.",
     image: "/images/hack.png",
   },
 ];
