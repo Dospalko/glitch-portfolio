@@ -110,7 +110,7 @@ export const projectsData = [
       "OOP",
       "Sprint Management"
     ],
-    imageUrl: "/images/pyscrum.webp",
+    imageUrl: "/images/pyscrum.png",
     liveUrl: "#",
     codeUrl: "#",
     category: "personal"
