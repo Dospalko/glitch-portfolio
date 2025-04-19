@@ -118,7 +118,8 @@ const ProjectsPage = () => {
               {/* Obrázok nad sekciou Recent Work */}
              
               <h4 className="text-xl font-semibold font-mono text-[var(--color-text-secondary)] text-center md:text-left">
-                // Recent Work
+                // Recent Workls
+                
               </h4>
               {displayedWorkProjects.length > 0 ? (
                 <motion.div

@@ -36,7 +36,7 @@ const ContactForm = () => {
             whileTap={{ scale: 0.95 }}
             className="w-full px-6 py-3 bg-[var(--color-accent-glitch)] text-[var(--color-background)] font-bold font-mono rounded hover:bg-[var(--color-accent-glitch-darker)] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-glitch)] focus:ring-offset-2 focus:ring-offset-[var(--color-background)] animate-text-jitter-slight-hover"
           >
-            Send Message >
+            Send Message 
           </motion.button>
      </form>
   )
