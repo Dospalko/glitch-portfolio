@@ -70,7 +70,7 @@ export const projectsData = [
       "Tailwind CSS",
       "Framer Motion",
     ],
-    imageUrl: "https://via.placeholder.com/600x400/1A1A1A/EAEAEA?text=GitViZ",
+    imageUrl: "/images/gitviz.png",
     liveUrl: "https://gitviz.vercel.app",
     codeUrl: "https://github.com/yourusername/gitviz",
     category: "personal",
