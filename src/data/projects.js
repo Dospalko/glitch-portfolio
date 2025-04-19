@@ -21,10 +21,28 @@ export const projectsData = [
       "REST API",
       "Full Stack",
     ],
-    imageUrl: "/images/finapp-dashboard.png", // Nahraď skutočnou cestou/URL
+    imageUrl: "/images/finapp.png", // Nahraď skutočnou cestou/URL
     liveUrl: null, // Nahraď URL nasadenej aplikácie, ak existuje
     codeUrl: "YOUR_GITHUB_REPOSITORY_URL", // Nahraď URL tvojho repozitára
     category: "personal", // Alebo "Finance", "Personal Project"
+  },
+  {
+    id: 5,
+    title: "GitViZ",
+    description:
+      "Interactive GitHub profile visualization tool that provides insights into user activity, language usage, and repository statistics. Features include contribution heatmaps, language breakdown charts, and detailed repository analytics.",
+    tags: [
+      "Next.js",
+      "TypeScript",
+      "GitHub API",
+      "Recharts",
+      "Tailwind CSS",
+      "Framer Motion",
+    ],
+    imageUrl: "/images/gitviz.png",
+    liveUrl: "https://gitviz.vercel.app",
+    codeUrl: "https://github.com/yourusername/gitviz",
+    category: "personal",
   },
   {
     id: 2,
@@ -52,29 +70,12 @@ export const projectsData = [
       "NER Annotation tool for Slovak language, Web application for annotating Slovak texts with named entities. It was a part of my bachelor thesis. I used it to create a dataset for Slovak language NER model.",
     tags: ["Flask", "Python", "HuggingFace", "OpenAI", "PostgreSQL", "React"],
     imageUrl:
-      "https://via.placeholder.com/600x400/1A1A1A/EAEAEA?text=GlitchArt+Generator",
+      "/images/ner.png",
     liveUrl: "#", // Maybe the portfolio itself uses this?
     codeUrl: "#",
     category: "personal", // Add category property s
   },
-  {
-    id: 5,
-    title: "GitViZ",
-    description:
-      "Interactive GitHub profile visualization tool that provides insights into user activity, language usage, and repository statistics. Features include contribution heatmaps, language breakdown charts, and detailed repository analytics.",
-    tags: [
-      "Next.js",
-      "TypeScript",
-      "GitHub API",
-      "Recharts",
-      "Tailwind CSS",
-      "Framer Motion",
-    ],
-    imageUrl: "/images/gitviz.png",
-    liveUrl: "https://gitviz.vercel.app",
-    codeUrl: "https://github.com/yourusername/gitviz",
-    category: "personal",
-  },
+  
   {
     id: 4,
     title: "LSTM Models",
@@ -94,6 +95,25 @@ export const projectsData = [
     codeUrl: "#",
     category: "work", // Add category property s
   },
-
-  // Add more of your best projects here...
+  {
+    id: 5,
+    title: "PyScrum CLI & Task Manager",
+    description:
+      "A powerful command-line interface for managing sprints and tasks with features like priority tagging, due dates, status tracking, reports in CSV/HTML, and backlog/sprint workflows. Built with Python and Typer, using SQLite for persistence. Includes automated testing with Pytest.",
+    tags: [
+      "Python",
+      "Typer",
+      "SQLite",
+      "CLI",
+      "TDD",
+      "Pytest",
+      "OOP",
+      "Sprint Management"
+    ],
+    imageUrl: "/images/pyscrum.webp",
+    liveUrl: "#",
+    codeUrl: "#",
+    category: "personal"
+  }
+  
 ];
