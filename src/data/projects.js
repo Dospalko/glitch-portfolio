@@ -45,6 +45,38 @@ export const projectsData = [
     category: "personal",
   },
   {
+    id: 3,
+    title: "PyScrum CLI & Task Manager",
+    description:
+      "A powerful command-line interface for managing sprints and tasks with features like priority tagging, due dates, status tracking, reports in CSV/HTML, and backlog/sprint workflows. Built with Python and Typer, using SQLite for persistence. Includes automated testing with Pytest.",
+    tags: [
+      "Python",
+      "Typer",
+      "SQLite",
+      "CLI",
+      "TDD",
+      "Pytest",
+      "OOP",
+      "Sprint Management"
+    ],
+    imageUrl: "/images/pyscrum.png",
+    liveUrl: "#",
+    codeUrl: "#",
+    category: "personal"
+  },
+  {
+    id: 5,
+    title: "Annotation tool",
+    description:
+      "NER Annotation tool for Slovak language, Web application for annotating Slovak texts with named entities. It was a part of my bachelor thesis. I used it to create a dataset for Slovak language NER model.",
+    tags: ["Flask", "Python", "HuggingFace", "OpenAI", "PostgreSQL", "React"],
+    imageUrl:
+      "/images/ner.png",
+    liveUrl: "#", // Maybe the portfolio itself uses this?
+    codeUrl: "#",
+    category: "personal", // Add category property s
+  },
+  {
     id: 2,
     title: "Data Science projects",
     description:
@@ -63,18 +95,6 @@ export const projectsData = [
     codeUrl: "#",
     category: "personal", // Add category property s
   },
-  {
-    id: 3,
-    title: "Annotation tool",
-    description:
-      "NER Annotation tool for Slovak language, Web application for annotating Slovak texts with named entities. It was a part of my bachelor thesis. I used it to create a dataset for Slovak language NER model.",
-    tags: ["Flask", "Python", "HuggingFace", "OpenAI", "PostgreSQL", "React"],
-    imageUrl:
-      "/images/ner.png",
-    liveUrl: "#", // Maybe the portfolio itself uses this?
-    codeUrl: "#",
-    category: "personal", // Add category property s
-  },
   
   {
     id: 4,
@@ -90,30 +110,11 @@ export const projectsData = [
       "Tensorflow",
     ],
     imageUrl:
-      "https://via.placeholder.com/600x400/1A1A1A/EAEAEA?text=GlitchArt+Generator",
+      "/images/lstm.png",
     liveUrl: "#", // Maybe the portfolio itself uses this?
     codeUrl: "#",
     category: "work", // Add category property s
   },
-  {
-    id: 5,
-    title: "PyScrum CLI & Task Manager",
-    description:
-      "A powerful command-line interface for managing sprints and tasks with features like priority tagging, due dates, status tracking, reports in CSV/HTML, and backlog/sprint workflows. Built with Python and Typer, using SQLite for persistence. Includes automated testing with Pytest.",
-    tags: [
-      "Python",
-      "Typer",
-      "SQLite",
-      "CLI",
-      "TDD",
-      "Pytest",
-      "OOP",
-      "Sprint Management"
-    ],
-    imageUrl: "/images/pyscrum.png",
-    liveUrl: "#",
-    codeUrl: "#",
-    category: "personal"
-  }
+  
   
 ];
