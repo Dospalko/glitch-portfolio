@@ -2,7 +2,7 @@
 export const projectsData = [
   {
     id: 1,
-    title: "FinApp - Personal Finance Tracker",
+    title: "Personal Finance Tracker",
     description:
       "Single-page web application for tracking income and expenses. Features include dynamic budgeting with automatic creation (defaults to €100), 50/30/20 rule visualization, and a weekly snapshot report. Built with React, Flask, and TailwindCSS.",
     tags: [
@@ -11,15 +11,12 @@ export const projectsData = [
       "Python",
       "JavaScript",
       "TailwindCSS",
-      "SQLAlchemy",
       "SQLite",
-      "Flask-Migrate",
       "Flask-CORS",
-      "Axios",
       "Framer Motion",
       "JWT",
       "REST API",
-      "Full Stack",
+    
     ],
     imageUrl: "/images/finapp.png", // Nahraď skutočnou cestou/URL
     liveUrl: null, // Nahraď URL nasadenej aplikácie, ak existuje
@@ -46,7 +43,7 @@ export const projectsData = [
   },
   {
     id: 3,
-    title: "PyScrum CLI & Task Manager",
+    title: "PyScrum - Python Scrum",
     description:
       "A powerful command-line interface for managing sprints and tasks with features like priority tagging, due dates, status tracking, reports in CSV/HTML, and backlog/sprint workflows. Built with Python and Typer, using SQLite for persistence. Includes automated testing with Pytest.",
     tags: [
@@ -57,12 +54,14 @@ export const projectsData = [
       "TDD",
       "Pytest",
       "OOP",
-      "Sprint Management"
+      "Sprint Management",
+      "Task Management",
+      "Reporting",
     ],
     imageUrl: "/images/pyscrum.png",
-    liveUrl: "#",
-    codeUrl: "#",
-    category: "personal"
+    liveUrl: null, // Nahraď URL nasadenej aplikácie, ak existuje
+    codeUrl: "YOUR_GITHUB_REPOSITORY_URL", // Nahraď URL tvojho repozitára
+    category: "personal",
   },
   {
     id: 5,
@@ -88,7 +87,6 @@ export const projectsData = [
       "Pandas",
       "Matplotlib",
       "Scikit-learn",
-      "Tensorflow",
     ],
     imageUrl: "/images/data.webp",
     liveUrl: "#",
