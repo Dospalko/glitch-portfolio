@@ -97,7 +97,7 @@ const ContactPage = () => {
              aria-label="Email">
             <VscMail size={28} />
           </a>
-           <a href="YOUR_GITHUB_LINK" // <-- REPLACE GITHUB LINK
+           <a href="https://github.com/Dospalko" // <-- REPLACE GITHUB LINK
               target="_blank" rel="noopener noreferrer"
               className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-glitch)] transition-colors duration-200"
               aria-label="GitHub">

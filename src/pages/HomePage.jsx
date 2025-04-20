@@ -222,7 +222,7 @@ const HomePage = () => {
                   <FaInstagram className="inline-block mr-2" />
                   Instagram
                 </GlitchButton>
-                <GlitchButton href="https://github.com/yourprofile">
+                <GlitchButton href="https://github.com/Dospalko">
                   <FaGithub className="inline-block mr-2" />
                   GitHub
                 </GlitchButton>
