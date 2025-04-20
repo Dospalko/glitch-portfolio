@@ -38,7 +38,7 @@ export const projectsData = [
     ],
     imageUrl: "/images/gitviz.png",
     liveUrl: "https://gitviz.vercel.app",
-    codeUrl: "https://github.com/yourusername/gitviz",
+    codeUrl: "https://github.com/Dospalko/GitGet",
     category: "personal",
   },
   {
@@ -59,8 +59,7 @@ export const projectsData = [
       "Reporting",
     ],
     imageUrl: "/images/pyscrum.png",
-    liveUrl: null, // Nahraď URL nasadenej aplikácie, ak existuje
-    codeUrl: "YOUR_GITHUB_REPOSITORY_URL", // Nahraď URL tvojho repozitára
+    codeUrl: "https://github.com/Dospalko/PyScrum", // Nahraď URL tvojho repozitára
     category: "personal",
   },
   {
