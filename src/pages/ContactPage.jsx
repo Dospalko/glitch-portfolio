@@ -103,7 +103,7 @@ const ContactPage = () => {
               aria-label="GitHub">
             <VscGithubAlt size={28} />
           </a>
-          <a href="YOUR_LINKEDIN_LINK" // <-- REPLACE LINKEDIN LINK
+          <a href="https://www.linkedin.com/in/dominik-pa%C4%BEo-a61801205/" // <-- REPLACE LINKEDIN LINK
              target="_blank" rel="noopener noreferrer"
              className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-glitch)] transition-colors duration-200"
              aria-label="LinkedIn">

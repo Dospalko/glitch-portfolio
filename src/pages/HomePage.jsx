@@ -214,7 +214,7 @@ const HomePage = () => {
                 transition={{ duration: 0.5, delay: 0.5 }}
                 className="flex flex-wrap gap-4  justify-center md:justify-start "
               >
-                <GlitchButton className="ml-1" href="https://www.linkedin.com/in/yourprofile">
+                <GlitchButton className="ml-1" href="https://www.linkedin.com/in/dominik-pa%C4%BEo-a61801205/">
                   <FaLinkedin className="inline-block mr-2" />
                   LinkedIn
                 </GlitchButton>
