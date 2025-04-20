@@ -20,7 +20,7 @@ export const projectsData = [
     ],
     imageUrl: "/images/finapp.png", // Nahraď skutočnou cestou/URL
     liveUrl: null, // Nahraď URL nasadenej aplikácie, ak existuje
-    codeUrl: "YOUR_GITHUB_REPOSITORY_URL", // Nahraď URL tvojho repozitára
+    codeUrl: "https://github.com/Dospalko/FinApp", // Nahraď URL tvojho repozitára
     category: "personal", // Alebo "Finance", "Personal Project"
   },
   {
