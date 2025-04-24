@@ -63,7 +63,7 @@ export const projectsData = [
     category: "personal",
   },
   {
-    id: 5,
+    id: 6,
     title: "Annotation tool",
     description:
       "NER Annotation tool for Slovak language, Web application for annotating Slovak texts with named entities. It was a part of my bachelor thesis. I used it to create a dataset for Slovak language NER model.",
