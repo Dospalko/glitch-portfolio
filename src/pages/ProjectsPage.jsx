@@ -69,6 +69,32 @@ const modalContentVariants = {
   },
 }
 
+// Add new variants for project content transitions
+const projectContentVariants = {
+  enter: (direction) => ({
+    x: direction > 0 ? 300 : -300,
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 30,
+    },
+  },
+  exit: (direction) => ({
+    x: direction < 0 ? 300 : -300,
+    opacity: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 30,
+    },
+  }),
+}
+
 // --- Scroll Button Component ---
 const ScrollButton = ({ nextSectionId }) => {
   const onClick = () => {
@@ -94,7 +120,17 @@ const ScrollButton = ({ nextSectionId }) => {
 // --- Main Projects Page Component ---
 const ProjectsPage = () => {
   const [selectedProject, setSelectedProject] = useState(null)
-  // const [isScrolling, setIsScrolling] = useState(false); // State to track scroll animation
+  const [isScrolling, setIsScrolling] = useState(false)
+  const [direction, setDirection] = useState(0)
+  const [allProjects, setAllProjects] = useState([])
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  // Effect to combine all projects and set them in state
+  useEffect(() => {
+    const workProjects = projectsData.filter((p) => p.category === "work")
+    const personalProjects = projectsData.filter((p) => p.category === "personal")
+    setAllProjects([...workProjects, ...personalProjects])
+  }, [])
 
   // Effect to disable/enable body scroll when modal is open/closed
   useEffect(() => {
@@ -102,12 +138,15 @@ const ProjectsPage = () => {
     if (selectedProject) {
       document.body.style.overflow = "hidden"
     } else {
-      document.body.style.overflow = originalOverflow || "auto"
+      // Only restore overflow if we are not currently in the scroll-to-modal animation phase
+      if (!isScrolling) {
+        document.body.style.overflow = originalOverflow || "auto"
+      }
     }
     return () => {
       document.body.style.overflow = originalOverflow || "auto"
     }
-  }, [selectedProject])
+  }, [selectedProject, isScrolling])
 
   // --- Data Filtering ---
   const workProjects = projectsData.filter((p) => p.category === "work")
@@ -115,17 +154,59 @@ const ProjectsPage = () => {
   const displayedWork = workProjects.slice(0, 2)
 
   // --- Handlers ---
-  const handleProjectClick = (project) => {
-    // Simply set the selected project without scrolling
-    setSelectedProject(project)
-    // Ensure body scroll is disabled immediately
-    document.body.style.overflow = "hidden"
+  const handleProjectClick = (project, event) => {
+    // Prevent action if already scrolling
+    if (isScrolling) return
+
+    const cardElement = event.currentTarget
+    if (cardElement) {
+      setIsScrolling(true)
+      // Temporarily disable body scroll during the smooth scroll animation
+      document.body.style.overflow = "hidden"
+
+      // Find the index of the clicked project in the combined array
+      const projectIndex = allProjects.findIndex((p) => p.id === project.id)
+      setCurrentIndex(projectIndex)
+
+      // Scroll the clicked card into view smoothly
+      cardElement.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      })
+
+      // Set the selected project after a short delay to allow scroll animation
+      setTimeout(() => {
+        setSelectedProject(project)
+        setIsScrolling(false)
+      }, 400) // Shorter delay for better UX
+    }
   }
 
   const handleCloseModal = () => {
     setSelectedProject(null)
     // Explicitly ensure scrolling is re-enabled immediately on close
     document.body.style.overflow = "auto"
+  }
+
+  // Function to navigate to the next project
+  const handleNextProject = () => {
+    if (currentIndex < allProjects.length - 1) {
+      setDirection(1)
+      const nextIndex = currentIndex + 1
+      setCurrentIndex(nextIndex)
+      setSelectedProject(allProjects[nextIndex])
+    }
+  }
+
+  // Function to navigate to the previous project
+  const handlePrevProject = () => {
+    if (currentIndex > 0) {
+      setDirection(-1)
+      const prevIndex = currentIndex - 1
+      setCurrentIndex(prevIndex)
+      setSelectedProject(allProjects[prevIndex])
+    }
   }
 
   return (
@@ -159,7 +240,7 @@ const ProjectsPage = () => {
                     variants={itemVariants}
                     className="cursor-pointer group"
                     // Pass event to handler
-                    onClick={() => handleProjectClick(p)}
+                    onClick={(e) => handleProjectClick(p, e)}
                   >
                     <ProjectCard project={p} />
                   </motion.div>
@@ -247,7 +328,7 @@ const ProjectsPage = () => {
                   variants={itemVariants}
                   className="cursor-pointer group"
                   // Pass event to handler
-                  onClick={() => handleProjectClick(p)}
+                  onClick={(e) => handleProjectClick(p, e)}
                 >
                   <ProjectCard project={p} />
                 </motion.div>
@@ -276,11 +357,11 @@ const ProjectsPage = () => {
             <motion.div
               key="modal-content"
               className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                                       w-[90vw] max-w-xl max-h-[85vh]
-                                       bg-[var(--color-background-alt)]
-                                       border border-[var(--color-border-subtle)]
-                                       rounded-lg shadow-2xl z-50
-                                       overflow-hidden flex flex-col"
+                w-[90vw] max-w-xl max-h-[85vh]
+                bg-[var(--color-background-alt)]
+                border border-[var(--color-border-subtle)]
+                rounded-lg shadow-2xl z-50
+                overflow-hidden flex flex-col"
               variants={modalContentVariants}
               initial="hidden"
               animate="visible"
@@ -313,56 +394,126 @@ const ProjectsPage = () => {
 
               {/* Modal Body (Scrollable) */}
               <div className="p-6 flex-grow overflow-y-auto custom-scrollbar">
-                <div className="bg-black/20 rounded-lg p-2 mb-6">
-                  <img
-                    src={selectedProject.imageUrl || "/placeholder.svg"}
-                    alt={selectedProject.title}
-                    className="w-full h-auto max-h-72 object-contain rounded"
-                    loading="lazy"
-                  />
-                </div>
-                <p className="text-[var(--color-text-secondary)] mb-6 text-sm leading-relaxed">
-                  {selectedProject.description}
-                </p>
-                <div className="mb-6">
-                  <h4 className="font-mono text-sm font-semibold mb-3 text-[var(--color-text-secondary)] flex items-center">
-                    <span className="text-[var(--color-accent-glitch)] mr-2">//</span> Technologies
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProject.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-block bg-[var(--color-highlight-bg)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] text-xs font-mono px-3 py-1.5 rounded-md hover:border-[var(--color-accent-glitch)]/50 transition-colors"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                <AnimatePresence initial={false} custom={direction} mode="wait">
+                  <motion.div
+                    key={selectedProject.id}
+                    custom={direction}
+                    variants={projectContentVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    className="flex flex-col"
+                  >
+                    <div className="bg-black/20 rounded-lg p-2 mb-6">
+                      <img
+                        src={selectedProject.imageUrl || "/placeholder.svg"}
+                        alt={selectedProject.title}
+                        className="w-full h-auto max-h-72 object-contain rounded"
+                        loading="lazy"
+                      />
+                    </div>
+                    <p className="text-[var(--color-text-secondary)] mb-6 text-sm leading-relaxed">
+                      {selectedProject.description}
+                    </p>
+                    <div className="mb-6">
+                      <h4 className="font-mono text-sm font-semibold mb-3 text-[var(--color-text-secondary)] flex items-center">
+                        <span className="text-[var(--color-accent-glitch)] mr-2">//</span> Technologies
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedProject.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="inline-block bg-[var(--color-highlight-bg)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] text-xs font-mono px-3 py-1.5 rounded-md hover:border-[var(--color-accent-glitch)]/50 transition-colors"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
-              {/* Modal Footer (Links) */}
-              <div className="p-5 border-t border-[var(--color-border-subtle)] flex justify-end space-x-4 flex-shrink-0 bg-[var(--color-background)]/80 backdrop-blur-sm">
-                {selectedProject.liveUrl && (
-                  <a
-                    href={selectedProject.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-medium px-4 py-2 rounded-md bg-[var(--color-accent-glitch)]/10 border border-[var(--color-accent-glitch)]/30 text-[var(--color-accent-glitch)] hover:bg-[var(--color-accent-glitch)]/20 transition-colors"
+              {/* Modal Footer (Links and Navigation) */}
+              <div className="p-5 border-t border-[var(--color-border-subtle)] flex justify-between items-center flex-shrink-0 bg-[var(--color-background)]/80 backdrop-blur-sm">
+                {/* Project Navigation */}
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={handlePrevProject}
+                    disabled={currentIndex <= 0}
+                    className={`p-2 rounded-full ${
+                      currentIndex <= 0
+                        ? "text-[var(--color-text-secondary)]/30 cursor-not-allowed"
+                        : "text-[var(--color-text-secondary)] hover:text-[var(--color-accent-glitch)] hover:bg-[var(--color-highlight-bg)]"
+                    } transition-colors`}
+                    aria-label="Previous project"
                   >
-                    Live Demo
-                  </a>
-                )}
-                {selectedProject.codeUrl && (
-                  <a
-                    href={selectedProject.codeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-medium px-4 py-2 rounded-md bg-[var(--color-highlight-bg)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] hover:border-[var(--color-accent-glitch)]/50 transition-colors"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m15 18-6-6 6-6" />
+                    </svg>
+                  </button>
+                  <span className="text-xs text-[var(--color-text-secondary)]">
+                    {currentIndex + 1} / {allProjects.length}
+                  </span>
+                  <button
+                    onClick={handleNextProject}
+                    disabled={currentIndex >= allProjects.length - 1}
+                    className={`p-2 rounded-full ${
+                      currentIndex >= allProjects.length - 1
+                        ? "text-[var(--color-text-secondary)]/30 cursor-not-allowed"
+                        : "text-[var(--color-text-secondary)] hover:text-[var(--color-accent-glitch)] hover:bg-[var(--color-highlight-bg)]"
+                    } transition-colors`}
+                    aria-label="Next project"
                   >
-                    Source Code
-                  </a>
-                )}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Project Links */}
+                <div className="flex space-x-4">
+                  {selectedProject.liveUrl && (
+                    <a
+                      href={selectedProject.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium px-4 py-2 rounded-md bg-[var(--color-accent-glitch)]/10 border border-[var(--color-accent-glitch)]/30 text-[var(--color-accent-glitch)] hover:bg-[var(--color-accent-glitch)]/20 transition-colors"
+                    >
+                      Live Demo
+                    </a>
+                  )}
+                  {selectedProject.codeUrl && (
+                    <a
+                      href={selectedProject.codeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium px-4 py-2 rounded-md bg-[var(--color-highlight-bg)] border border-[var(--color-border-subtle)] text-[var(--color-text-primary)] hover:border-[var(--color-accent-glitch)]/50 transition-colors"
+                    >
+                      Source Code
+                    </a>
+                  )}
+                </div>
               </div>
             </motion.div>
           </>
