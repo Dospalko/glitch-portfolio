@@ -8,7 +8,6 @@ import { FaChevronDown, FaTimes } from "react-icons/fa"
 import { glitchyPageTransitionVariants } from "../utils/motionVariants" // Ensure this path is correct
 
 const HEADER_HEIGHT_OFFSET = 90 // Keep for ScrollButton if needed
-// const SCROLL_DELAY_MS = 600; // Delay in milliseconds to allow scroll before modal appears
 
 const workExperienceData = [
   {
@@ -120,7 +119,6 @@ const ScrollButton = ({ nextSectionId }) => {
 // --- Main Projects Page Component ---
 const ProjectsPage = () => {
   const [selectedProject, setSelectedProject] = useState(null)
-  const [isScrolling, setIsScrolling] = useState(false)
   const [direction, setDirection] = useState(0)
   const [allProjects, setAllProjects] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -138,15 +136,12 @@ const ProjectsPage = () => {
     if (selectedProject) {
       document.body.style.overflow = "hidden"
     } else {
-      // Only restore overflow if we are not currently in the scroll-to-modal animation phase
-      if (!isScrolling) {
-        document.body.style.overflow = originalOverflow || "auto"
-      }
+      document.body.style.overflow = originalOverflow || "auto"
     }
     return () => {
       document.body.style.overflow = originalOverflow || "auto"
     }
-  }, [selectedProject, isScrolling])
+  }, [selectedProject])
 
   // --- Data Filtering ---
   const workProjects = projectsData.filter((p) => p.category === "work")
@@ -154,33 +149,16 @@ const ProjectsPage = () => {
   const displayedWork = workProjects.slice(0, 2)
 
   // --- Handlers ---
-  const handleProjectClick = (project, event) => {
-    // Prevent action if already scrolling
-    if (isScrolling) return
+  const handleProjectClick = (project) => {
+    // Find the index of the clicked project in the combined array
+    const projectIndex = allProjects.findIndex((p) => p.id === project.id)
+    setCurrentIndex(projectIndex)
 
-    const cardElement = event.currentTarget
-    if (cardElement) {
-      setIsScrolling(true)
-      // Temporarily disable body scroll during the smooth scroll animation
-      document.body.style.overflow = "hidden"
+    // Immediately show the modal without scrolling
+    setSelectedProject(project)
 
-      // Find the index of the clicked project in the combined array
-      const projectIndex = allProjects.findIndex((p) => p.id === project.id)
-      setCurrentIndex(projectIndex)
-
-      // Scroll the clicked card into view smoothly
-      cardElement.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "nearest",
-      })
-
-      // Set the selected project after a short delay to allow scroll animation
-      setTimeout(() => {
-        setSelectedProject(project)
-        setIsScrolling(false)
-      }, 400) // Shorter delay for better UX
-    }
+    // Disable body scroll
+    document.body.style.overflow = "hidden"
   }
 
   const handleCloseModal = () => {
@@ -239,8 +217,7 @@ const ProjectsPage = () => {
                     key={`work-${p.id}`}
                     variants={itemVariants}
                     className="cursor-pointer group"
-                    // Pass event to handler
-                    onClick={(e) => handleProjectClick(p, e)}
+                    onClick={() => handleProjectClick(p)}
                   >
                     <ProjectCard project={p} />
                   </motion.div>
@@ -327,8 +304,7 @@ const ProjectsPage = () => {
                   key={`personal-${p.id}`}
                   variants={itemVariants}
                   className="cursor-pointer group"
-                  // Pass event to handler
-                  onClick={(e) => handleProjectClick(p, e)}
+                  onClick={() => handleProjectClick(p)}
                 >
                   <ProjectCard project={p} />
                 </motion.div>
@@ -393,7 +369,7 @@ const ProjectsPage = () => {
               </div>
 
               {/* Modal Body (Scrollable) */}
-              <div className="p-6 flex-grow overflow-y-auto custom-scrollbar">
+              <div className="p-6 flex-grow overflow-y-auto custom-scrollbar" style={{ maxHeight: "60vh" }}>
                 <AnimatePresence initial={false} custom={direction} mode="wait">
                   <motion.div
                     key={selectedProject.id}
