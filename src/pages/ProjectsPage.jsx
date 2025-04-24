@@ -1,4 +1,6 @@
 import React from 'react';
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import ProjectCard from '../components/ProjectCard';
 import { projectsData } from '../data/projects';
 import { motion } from 'framer-motion';
@@ -71,7 +73,6 @@ const containerVariants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
-
 const itemVariants = {
   hidden: { opacity: 0, y: 25, filter: "blur(3px)" },
   show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.4, ease: "easeOut" } },
@@ -83,11 +84,12 @@ const timelineItemVariants = {
 };
 
 const ProjectsPage = () => {
-  // Filtrácia projektov do kategórií "work" a "personal"
-  const workProjects = projectsData.filter(project => project.category === "work");
-  const personalProjects = projectsData.filter(project => project.category === "personal");
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  // Vyberieme len prvé 2 pracovné projekty pre ľavú kolónu
+  const closeModal = () => setSelectedProject(null);
+
+  const workProjects = projectsData.filter(p => p.category === "work");
+  const personalProjects = projectsData.filter(p => p.category === "personal");
   const displayedWorkProjects = workProjects.slice(0, 2);
 
   return (
@@ -236,16 +238,17 @@ const ProjectsPage = () => {
             <span className="text-[var(--color-accent-glitch)]">//</span> Personal Side Projects
           </motion.h3>
           {personalProjects.length > 0 ? (
-            <motion.div
+              <motion.div
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 w-full"
               variants={containerVariants}
               initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.1 }}
+              animate="show"
             >
-              {personalProjects.map((project) => (
+              {personalProjects.map(project => (
                 <motion.div key={project.id} variants={itemVariants}>
-                  <ProjectCard project={project} />
+                  <div onClick={() => setSelectedProject(project)} className="cursor-pointer">
+                    <ProjectCard project={project} />
+                  </div>
                 </motion.div>
               ))}
             </motion.div>
@@ -259,9 +262,80 @@ const ProjectsPage = () => {
             </motion.p>
           )}
         </motion.div>
+        
       </div>
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+            variants={backdrop}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <motion.div
+              className="bg-[var(--color-background)] rounded-lg shadow-lg max-w-lg w-full mx-4 p-6 relative"
+              variants={modalAnim}
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 text-[var(--color-text-secondary)] hover:text-[var(--color-accent-glitch)]"
+                aria-label="Close"
+              >
+                <FaTimes size={20} />
+              </button>
+
+              {/* Project Details */}
+              <img
+                src={selectedProject.imageUrl}
+                alt={selectedProject.title}
+                className="w-full h-48 object-contain mb-4"
+                loading="lazy"
+              />
+              <h2 className="text-2xl font-bold font-mono mb-2 text-[var(--color-text-primary)]">
+                {selectedProject.title}
+              </h2>
+              <p className="text-[var(--color-text-secondary)] mb-4">{selectedProject.description}</p>
+              <div className="flex flex-wrap mb-4">
+                {selectedProject.tags.map(tag => (
+                  <span
+                    key={tag}
+                    className="inline-block bg-[var(--color-highlight-bg)] border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] text-xs font-mono px-2 py-1 rounded mr-2 mb-2"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div className="flex space-x-4">
+                {selectedProject.liveUrl && (
+                  <a
+                    href={selectedProject.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium hover:underline text-[var(--color-accent-glitch)]"
+                  >
+                    Live Demo
+                  </a>
+                )}
+                {selectedProject.codeUrl && (
+                  <a
+                    href={selectedProject.codeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium hover:underline text-[var(--color-accent-glitch)]"
+                  >
+                    Source Code
+                  </a>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.section>
   );
 };
 
 export default ProjectsPage;
+ 
