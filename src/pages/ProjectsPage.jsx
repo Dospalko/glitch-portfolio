@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ProjectCard from '../components/ProjectCard'; // Assuming this path is correct
-import { projectsData } from '../data/projects'; // Assuming this path is correct
+import ProjectCard from '../components/ProjectCard'; // Ensure this path is correct
+import { projectsData } from '../data/projects'; // Ensure this path is correct
 import { FaChevronDown, FaTimes } from 'react-icons/fa';
-import { glitchyPageTransitionVariants } from '../utils/motionVariants'; // Assuming this path is correct
+import { glitchyPageTransitionVariants } from '../utils/motionVariants'; // Ensure this path is correct
 
 const HEADER_HEIGHT_OFFSET = 90; // Keep for ScrollButton if needed
 
@@ -26,19 +26,20 @@ const itemVariants = {
 const backdropVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.3 } },
+    exit: { opacity: 0, transition: { duration: 0.2 } } // Added exit transition for backdrop
 };
 const modalContentVariants = {
-    hidden: { opacity: 0, scale: 0.9, y: "-45%" }, // Start slightly above center for scale effect
+    hidden: { opacity: 0, scale: 0.9, y: "-50%" }, // Start centered vertically
     visible: {
         opacity: 1,
         scale: 1,
-        y: "-50%", // Center vertically
-        transition: { type: 'spring', stiffness: 300, damping: 30, delay: 0.1 }, // Slight delay after scroll
+        y: "-50%", // Stay centered
+        transition: { type: 'spring', stiffness: 300, damping: 25 }, // Spring animation
     },
     exit: {
         opacity: 0,
         scale: 0.9,
-        y: "-45%",
+        y: "-50%", // Center vertically on exit
         transition: { duration: 0.2 }
     }
 };
@@ -48,8 +49,11 @@ const ScrollButton = ({ nextSectionId }) => {
     const onClick = () => {
         const el = document.getElementById(nextSectionId);
         if (!el) return;
-        const top = el.getBoundingClientRect().top + window.pageYOffset - HEADER_HEIGHT_OFFSET;
-        window.scrollTo({ top, behavior: 'smooth' });
+        // Calculate scroll position considering potential header offset
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - HEADER_HEIGHT_OFFSET;
+
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
     };
     return (
         <motion.button
@@ -57,6 +61,7 @@ const ScrollButton = ({ nextSectionId }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             className="absolute bottom-4 left-1/2 -translate-x-1/2 p-3 border border-[var(--color-border-subtle)] rounded-full text-[var(--color-accent-glitch)] bg-[var(--color-background)]/50 backdrop-blur-sm z-20"
+            aria-label={`Scroll to ${nextSectionId.replace('-', ' ')}`} // Accessibility
         >
             <FaChevronDown size={22} />
         </motion.button>
@@ -66,12 +71,17 @@ const ScrollButton = ({ nextSectionId }) => {
 // --- Main Projects Page Component ---
 const ProjectsPage = () => {
     const [selectedProject, setSelectedProject] = useState(null);
-    const projectRefs = useRef({}); // Store refs for each project card container
 
     // Effect to disable/enable body scroll when modal is open/closed
     useEffect(() => {
-        document.body.style.overflow = selectedProject ? 'hidden' : 'auto';
-        return () => { document.body.style.overflow = 'auto'; }; // Cleanup on unmount
+        const originalOverflow = document.body.style.overflow; // Store original value
+        if (selectedProject) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = originalOverflow || 'auto'; // Restore original or default
+        }
+        // Cleanup function to restore original overflow on unmount
+        return () => { document.body.style.overflow = originalOverflow || 'auto'; };
     }, [selectedProject]);
 
     // --- Data Filtering ---
@@ -80,22 +90,9 @@ const ProjectsPage = () => {
     const displayedWork = workProjects.slice(0, 2); // Display first 2 work projects initially
 
     // --- Handlers ---
-    const handleProjectClick = (project, event) => {
-        // 1. Scroll the clicked card into view
-        const cardElement = event.currentTarget; // The div that was clicked
-        if (cardElement) {
-            cardElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center', // Try to center the element vertically
-                inline: 'nearest'
-            });
-        }
-
-        // 2. Set the selected project slightly delayed to allow scroll to start
-        // Adjust delay timing if needed (e.g., 100-300ms)
-        setTimeout(() => {
-            setSelectedProject(project);
-        }, 200);
+    // SIMPLIFIED HANDLER: Just sets the selected project state
+    const handleProjectClick = (project) => {
+        setSelectedProject(project);
     };
 
     const handleCloseModal = () => {
@@ -105,7 +102,7 @@ const ProjectsPage = () => {
     return (
         <motion.section
             id="projects-page"
-            className="py-16 md:py-10 overflow-hidden" // Keep overflow hidden on main section? Maybe remove if scroll is desired.
+            className="py-16 md:py-10 overflow-hidden" // Section overflow hidden is generally fine
             variants={glitchyPageTransitionVariants}
             initial="initial"
             animate="animate"
@@ -132,10 +129,8 @@ const ProjectsPage = () => {
                                     <motion.div
                                         key={`work-${p.id}`}
                                         variants={itemVariants}
-                                        // Assign ref to the clickable div
-                                        ref={el => projectRefs.current[`work-${p.id}`] = el}
                                         className="cursor-pointer group" // Added group for potential hover effects on card
-                                        onClick={(e) => handleProjectClick(p, e)}
+                                        onClick={() => handleProjectClick(p)} // Simplified onClick
                                     >
                                         <ProjectCard project={p} />
                                     </motion.div>
@@ -144,15 +139,15 @@ const ProjectsPage = () => {
                         </div>
                         {/* Career Path */}
                         <div className="w-full md:w-5/12">
-                            <h4 className="text-xl font-semibold font-mono text-[var(--color-text-secondary)] mb-6">// Career Path</h4>
-                            <div className="relative pl-8 py-4">
-                                {/* Timeline line */}
-                                <div className="absolute top-0 bottom-0 left-0 w-0.5 bg-[var(--color-accent-glitch)]/50" />
+                             <h4 className="text-xl font-semibold font-mono text-[var(--color-text-secondary)] mb-6">// Career Path</h4>
+                             <div className="relative pl-8 py-4">
+                                 {/* Timeline line */}
+                                <div className="absolute top-0 bottom-0 left-0 w-0.5 bg-[var(--color-accent-glitch)]/50" aria-hidden="true"/> {/* Accessibility: hide decorative element */}
                                 <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-10">
                                     {workExperienceData.map(exp => (
                                         <motion.div key={exp.id} variants={itemVariants} className="relative">
                                             {/* Timeline dot */}
-                                            <div className="absolute -left-[calc(1rem+2px)] top-1 w-2 h-2 rounded-full bg-[var(--color-accent-glitch)] border-2 border-[var(--color-background)]" />
+                                            <div className="absolute -left-[calc(1rem+2px)] top-1 w-2 h-2 rounded-full bg-[var(--color-accent-glitch)] border-2 border-[var(--color-background)]" aria-hidden="true"/> {/* Accessibility: hide decorative element */}
                                             <p className="text-xs uppercase font-mono text-[var(--color-text-secondary)] mb-1">{exp.dates}</p>
                                             <h5 className="text-lg font-bold font-mono text-[var(--color-text-primary)] mb-1">{exp.title}</h5>
                                             <p className="text-sm font-mono text-[var(--color-text-secondary)] mb-2">{exp.company}</p>
@@ -160,7 +155,7 @@ const ProjectsPage = () => {
                                         </motion.div>
                                     ))}
                                 </motion.div>
-                            </div>
+                             </div>
                         </div>
                     </div>
                     {/* Conditionally render scroll button only if personal projects exist */}
@@ -175,16 +170,17 @@ const ProjectsPage = () => {
                         viewport={{ once: true, amount: 0.5 }}
                         transition={{ duration: 0.5 }}
                         className="relative my-20 flex justify-center items-center"
+                        aria-hidden="true" // Hide decorative divider from screen readers
                     >
                         <motion.div
                             className="w-full h-px bg-[var(--color-border-subtle)]"
                             animate={{ x: [0, -5, 5, -5, 5, 0], opacity: [1, 0.8, 1, 0.8, 1, 1] }}
-                            transition={{ duration: 1.5, repeat: Infinity, repeatType: 'loop' }}
+                            transition={{ duration: 1.5, repeat: Infinity, repeatType: 'mirror' }} // Changed repeatType
                         />
                         <motion.span
                             className="absolute px-4 bg-[var(--color-background)] font-mono text-sm text-[var(--color-text-secondary)] glitch-text"
                             animate={{ x: [0, 2, -2, 2, -2, 0], opacity: [1, 0.85, 1, 0.85, 1, 1] }}
-                            transition={{ duration: 1.2, repeat: Infinity, repeatType: 'loop' }}
+                            transition={{ duration: 1.2, repeat: Infinity, repeatType: 'mirror' }} // Changed repeatType
                         >
                             // personal_ventures //
                         </motion.span>
@@ -194,11 +190,12 @@ const ProjectsPage = () => {
                 {/* PERSONAL PROJECTS (Only if they exist) */}
                 {personalProjects.length > 0 && (
                     <motion.div
-                        id="personal-projects"
+                        id="personal-projects" // ID for scroll button target
                         initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.1 }}
+                        whileInView={{ opacity: 1, y: 0 }} // Animate when scrolling into view
+                        viewport={{ once: true, amount: 0.1 }} // Trigger animation once
                         transition={{ duration: 0.4 }}
+                        className="pb-16 md:pb-20" // Add padding bottom for spacing
                     >
                         <h3 className="text-2xl md:text-3xl font-bold font-mono mb-8 text-center glitch-text">
                             <span className="text-[var(--color-accent-glitch)]">//</span> Personal Side Projects
@@ -206,18 +203,16 @@ const ProjectsPage = () => {
                         <motion.div
                             variants={containerVariants}
                             initial="hidden"
-                            animate="show" // Use animate="show" for initial load, or whileInView for scroll triggering
-                            viewport={{ once: true, amount: 0.1 }} // Use viewport if triggering on scroll
+                            whileInView="show" // Use whileInView for staggered animation on scroll
+                            viewport={{ once: true, amount: 0.1 }} // Adjust amount as needed
                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                         >
                             {personalProjects.map(p => (
                                 <motion.div
                                     key={`personal-${p.id}`}
                                     variants={itemVariants}
-                                    // Assign ref to the clickable div
-                                    ref={el => projectRefs.current[`personal-${p.id}`] = el}
-                                    className="cursor-pointer group" // Added group
-                                    onClick={(e) => handleProjectClick(p, e)}
+                                    className="cursor-pointer group"
+                                    onClick={() => handleProjectClick(p)} // Simplified onClick
                                 >
                                     <ProjectCard project={p} />
                                 </motion.div>
@@ -234,11 +229,11 @@ const ProjectsPage = () => {
                         {/* Backdrop Overlay */}
                         <motion.div
                             key="backdrop"
-                            className="fixed inset-0 bg-black/70 z-40" // Semi-transparent backdrop, lower z-index
+                            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40" // Added backdrop blur
                             variants={backdropVariants}
                             initial="hidden"
                             animate="visible"
-                            exit="hidden"
+                            exit="exit" // Use exit variant
                             onClick={handleCloseModal} // Close modal on backdrop click
                         />
 
@@ -251,36 +246,39 @@ const ProjectsPage = () => {
                                        bg-[var(--color-background-alt)] // Use an alternative bg if desired
                                        border border-[var(--color-border-subtle)]
                                        rounded-lg shadow-2xl z-50 // Higher z-index
-                                       overflow-y-auto // Allow scrolling within modal if content overflows
+                                       overflow-hidden // Hide overflow, internal scroll handled by body
                                        flex flex-col" // Use flex column for internal layout
                             variants={modalContentVariants}
                             initial="hidden"
                             animate="visible"
-                            exit="exit"
+                            exit="exit" // Use exit variant
                             // Prevent clicks inside the modal from closing it via the backdrop
                             onClick={e => e.stopPropagation()}
+                            role="dialog" // Accessibility
+                            aria-modal="true" // Accessibility
+                            aria-labelledby="modal-title" // Accessibility
                         >
-                            {/* Modal Header (Optional, example with close button) */}
-                            <div className="flex justify-between items-center p-4 border-b border-[var(--color-border-subtle)] sticky top-0 bg-[var(--color-background-alt)]/80 backdrop-blur-sm">
-                                <h2 className="text-xl font-bold font-mono text-[var(--color-text-primary)]">
+                            {/* Modal Header */}
+                            <div className="flex justify-between items-center p-4 border-b border-[var(--color-border-subtle)] flex-shrink-0"> {/* flex-shrink-0 prevents header shrinking */}
+                                <h2 id="modal-title" className="text-xl font-bold font-mono text-[var(--color-text-primary)]">
                                     {selectedProject.title}
                                 </h2>
                                 <button
                                     onClick={handleCloseModal}
-                                    className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-glitch)] p-1 rounded-full hover:bg-[var(--color-highlight-bg)]"
+                                    className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-glitch)] p-1 rounded-full hover:bg-[var(--color-highlight-bg)] transition-colors"
                                     aria-label="Close project details"
                                 >
                                     <FaTimes size={20} />
                                 </button>
                             </div>
 
-                            {/* Modal Body */}
-                            <div className="p-6 flex-grow"> {/* flex-grow allows this area to take available space */}
+                            {/* Modal Body (Scrollable) */}
+                            <div className="p-6 flex-grow overflow-y-auto"> {/* flex-grow allows this area to take available space, overflow-y-auto for scroll */}
                                 <img
                                     src={selectedProject.imageUrl}
-                                    alt={selectedProject.title}
+                                    alt={selectedProject.title} // Keep alt text descriptive
                                     className="w-full h-auto max-h-60 object-contain mb-4 rounded" // Adjusted image styling
-                                    loading="lazy"
+                                    loading="lazy" // Lazy loading for images
                                 />
                                 <p className="text-[var(--color-text-secondary)] mb-4 text-sm leading-relaxed">
                                     {selectedProject.description}
@@ -301,7 +299,7 @@ const ProjectsPage = () => {
                             </div>
 
                              {/* Modal Footer (Links) */}
-                            <div className="p-4 border-t border-[var(--color-border-subtle] flex justify-end space-x-4 sticky bottom-0 bg-[var(--color-background-alt)]/80 backdrop-blur-sm">
+                            <div className="p-4 border-t border-[var(--color-border-subtle)] flex justify-end space-x-4 flex-shrink-0"> {/* flex-shrink-0 prevents footer shrinking */}
                                 {selectedProject.liveUrl && (
                                     <a
                                         href={selectedProject.liveUrl}
