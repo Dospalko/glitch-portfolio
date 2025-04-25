@@ -259,10 +259,10 @@ const ContactPage = () => {
                 <div>
                   <h4 className="font-mono text-[var(--color-text-secondary)] text-sm mb-1">_Email:</h4>
                   <a
-                    href="mailto:YOUR_EMAIL@example.com"
+                    href="mailto:dominikpalo12@gmail.com"
                     className="text-[var(--color-text-primary)] hover:text-[var(--color-accent-glitch)] transition-colors"
                   >
-                    YOUR_EMAIL@example.com
+                    dominikpalo12@gmail.com
                   </a>
                 </div>
               </div>
