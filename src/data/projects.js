@@ -112,6 +112,21 @@ export const projectsData = [
     codeUrl: "#",
     category: "work", // Add category property s
   },
+  {
+    "id": 5, // Assuming this is the next ID in your portfolio
+    "title": "ColorBuddy AI Palette Generator",
+    "description": "ColorBuddy is an intelligent web application designed to streamline the color palette creation process for designers and developers. Users can either upload an image to extract its dominant colors or leverage an AI-powered 'Inspire Me' feature to generate unique, aesthetically pleasing palettes. Key functionalities include automatic WCAG 2.1 contrast checking between palette colors to ensure accessibility, and instant export of palettes as ready-to-use Tailwind CSS configurations or standard CSS custom properties. The goal is to bridge the gap between color inspiration and practical implementation, making palette selection fast, accessible, and code-ready.",
+    "tags": [
+      "React",
+      "TypeScript",
+      "FastAPI",
+      "Python",
+    ],
+    "imageUrl": "/images/colorbuddy_preview.png", // You'll need to create a compelling preview image
+    "liveUrl": "https://your-colorbuddy-live-url.com", // Replace with actual live URL when deployed
+    "codeUrl": "https://github.com/your-username/colorbuddy-repo", // Replace with your GitHub repo URL
+    "category": "personal" // Or "full-stack" / "web-application"
+  }
   
   
 ];
