@@ -126,7 +126,25 @@ export const projectsData = [
     "liveUrl": "https://your-colorbuddy-live-url.com", // Replace with actual live URL when deployed
     "codeUrl": "https://github.com/your-username/colorbuddy-repo", // Replace with your GitHub repo URL
     "category": "personal" // Or "full-stack" / "web-application"
+  },
+  {
+    "id": 6, // Or the next available ID in your portfolio
+    "title": "MoodTunes - AI-Powered Music Discovery",
+    "description": "MoodTunes is an innovative web application that transforms your current feelings into a personalized music experience. Users describe their mood or vibe in natural language, and an AI (powered by OpenAI's GPT models) analyzes the sentiment and context. Based on this analysis, MoodTunes dynamically curates a playlist of suggested songs intended to match or complement the user's emotional state. The interface provides a seamless, full-screen experience with visual feedback and allows users to explore new music by linking out to search for the suggested tracks.",
+    "tags": [
+      "React",
+      "TypeScript",
+      "Node.js",
+      "Express.js",
+      "OpenAI API",
+      "AI",
+      "Tailwind CSS",
+      "Framer Motion"
+    ],
+    "imageUrl": "/images/moodtunes_preview.png", // Create an engaging preview image (e.g., screenshot of the app with a cool playlist)
+    "liveUrl": "https://your-moodtunes-live-url.com", // Replace with your actual deployed URL
+    "codeUrl": "https://github.com/your-username/moodtunes-repo", // Replace with your GitHub repository URL
+    "category": "personal" // Or "personal" / "ai-application" / "web-application"
   }
-  
   
 ];
