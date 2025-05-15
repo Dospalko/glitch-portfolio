@@ -122,7 +122,7 @@ export const projectsData = [
       "FastAPI",
       "Python",
     ],
-    "imageUrl": "/images/colorbuddy_preview.png", // You'll need to create a compelling preview image
+    "imageUrl": "/images/colorbud.png", // You'll need to create a compelling preview image
     "liveUrl": "https://your-colorbuddy-live-url.com", // Replace with actual live URL when deployed
     "codeUrl": "https://github.com/your-username/colorbuddy-repo", // Replace with your GitHub repo URL
     "category": "personal" // Or "full-stack" / "web-application"
